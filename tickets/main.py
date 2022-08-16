@@ -30,9 +30,9 @@ def lucky_tickets(n: int) -> int:
     table = matrix(magic_number(n), 10)
     sums = line(10, filler=1)
 
-    for i in range(2, n + 1):
+    for i in range(1, n):
         for j in range(10):
-            offset = magic_number(i - 1) + j
+            offset = magic_number(i) + j
             table[j][j:offset] = sums
 
         sums = get_sums(table)
