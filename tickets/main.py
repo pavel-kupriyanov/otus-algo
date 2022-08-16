@@ -12,9 +12,10 @@ def matrix(x: int, y: int, filler: int = 0) -> list[list[int]]:
 
 
 def get_sums(table: list[list[int]]) -> list[int]:
-    sums = line(len(table[0]))
+    size = len(table[0])
+    sums = line(size)
 
-    for i, _ in enumerate(sums):
+    for i in range(size):
         for j in range(10):
             sums[i] += table[j][i]
 
@@ -28,9 +29,6 @@ def magic_number(n: int) -> int:
 def lucky_tickets(n: int) -> int:
     table = matrix(magic_number(n), 10)
     sums = line(10, filler=1)
-
-    if n == 1:
-        return sum(sums)
 
     for i in range(2, n + 1):
         for j in range(10):
