@@ -10,6 +10,7 @@ parser.add_argument('-o', '--output_ext', help='Разрешение файло�
 parser.add_argument('-m', '--module', help='Модуль python с кодом решения задачи', default='main')
 parser.add_argument('-f', '--function', help='Имя функции в модуле', default='main')
 parser.add_argument('-d', '--description', help='Путь к файлу с описанием задачи', default='problem.txt')
+parser.add_argument('-t', '--tests', help='Список имен файлов для тестов, разделенных запятой', default=None)
 
 
 def main(
@@ -19,7 +20,8 @@ def main(
         output_ext: str = '.out',
         module_name: str = 'main',
         function_name: str = 'main',
-        description_path: str | None = None
+        description_path: str | None = None,
+        tests: str | None = None
 ):
     module = import_module(f'{task}.{module_name}')
     solution = getattr(module, function_name)
@@ -30,13 +32,19 @@ def main(
         with open(f'{task}/{description_path}') as fp:
             print(fp.read())
 
-    for case in path.glob(f'*{input_ext}'):
+    cases = path.glob(f'*{input_ext}')
+    if tests is not None:
+        files = set([f'{name.strip()}{input_ext}' for name in tests.split(',')])
+        cases = [case for case in cases if case.name in files]
+
+    for case in cases:
         print('-' * 10)
         case_name = case.name.removesuffix(input_ext)
         print(case_name)
+        print('-' * 10)
 
         with open(next(path.glob(f'{case_name}{output_ext}'))) as fp:
-            expected = fp.readline()
+            expected = fp.readline().strip()
 
         with open(case) as fp:
             data = fp.readlines()
@@ -62,5 +70,6 @@ if __name__ == '__main__':
         output_ext=args.output_ext,
         module_name=args.module,
         function_name=args.function,
-        description_path=args.description
+        description_path=args.description,
+        tests=args.tests
     )
