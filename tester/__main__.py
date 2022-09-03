@@ -129,7 +129,8 @@ def display_case(case: Case):
 def short_display_case(case: Case):
     print('-' * 10)
     print(case.name)
-    print(f'Время выполнения: {(case.result.time * 1000):.4f} ms')
+    print('Ввод:', case.input())
+    print(f'Время выполнения: {(case.result.time * 1000):.0f} ms')
     if case.result.success:
         print('Тест пройден')
     else:

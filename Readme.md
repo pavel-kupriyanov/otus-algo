@@ -5,6 +5,9 @@
 ### Тестер
 
 ```
+usage: python3 -m tester [-h] [-c CASES] [-i INPUT_EXT] [-o OUTPUT_EXT] [-m MODULE] [-f FUNCTION] [-d DESCRIPTION] [-t TESTS] [-s | --short | --no-short] [--timeout TIMEOUT]
+                   task
+
 Фреймворк для запуска тестов
 
 positional arguments:
@@ -26,6 +29,9 @@ options:
                         Путь к файлу с описанием задачи
   -t TESTS, --tests TESTS
                         Список имен файлов для тестов, разделенных запятой
+  -s, --short, --no-short
+                        Сокращенный формат вывода (default: False)
+  --timeout TIMEOUT     Максимальное время выполнения функции (секунды)
 
  ```
 
