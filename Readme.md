@@ -1,7 +1,13 @@
 # Отус алгоритмы и структуры данных
+
 ## Куприянов Павел
+
 ### Тестер
+
 ```
+usage: python3 -m tester [-h] [-c CASES] [-i INPUT_EXT] [-o OUTPUT_EXT] [-m MODULE] [-f FUNCTION] [-d DESCRIPTION] [-t TESTS] [-s | --short | --no-short] [--timeout TIMEOUT]
+                   task
+
 Фреймворк для запуска тестов
 
 positional arguments:
@@ -23,7 +29,20 @@ options:
                         Путь к файлу с описанием задачи
   -t TESTS, --tests TESTS
                         Список имен файлов для тестов, разделенных запятой
+  -s, --short, --no-short
+                        Сокращенный формат вывода (default: False)
+  --timeout TIMEOUT     Максимальное время выполнения функции (секунды)
 
  ```
+
 #### Запуск тестера:
-`python3 -m tester <имя пакета, например: tickets>`
+
+* Счастливые билеты: `python3 -m tester tickets`
+* Возведение в степень через разложение: `python3 -m tester power --module power_log_n`
+* Итеративное возведение в степень: `python3 -m tester power --module power_n`
+* Рекурсивное число Фибоначчи: `python3 -m tester fibo --module fibo_recursive`
+* Итеративное число Фибоначчи: `python3 -m tester fibo --module fibo_iter`
+* Матричное число Фибоначчи: `python3 -m tester fibo --module fibo_matrix`
+* Простые числа квадрат: `python3 -m tester primes --module primes_square`
+* Простые числа оптимизации: `python3 -m tester primes --module primes_cache`
+* Простые числа Эратосфен: `python3 -m tester primes --module primes_eratosphene`

@@ -1,6 +1,10 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, BooleanOptionalAction
 from importlib import import_module
+from dataclasses import dataclass
+from time import monotonic
 from pathlib import Path
+
+from .timeout import timeout_deco
 
 parser = ArgumentParser(description='Фреймворк для запуска тестов')
 parser.add_argument('task', metavar='task', help='Имя каталога для запуска тестов')
@@ -11,6 +15,37 @@ parser.add_argument('-m', '--module', help='Модуль python с кодом р
 parser.add_argument('-f', '--function', help='Имя функции в модуле', default='main')
 parser.add_argument('-d', '--description', help='Путь к файлу с описанием задачи', default='problem.txt')
 parser.add_argument('-t', '--tests', help='Список имен файлов для тестов, разделенных запятой', default=None)
+parser.add_argument('-s', '--short', help='Сокращенный формат вывода', type=bool,
+                    action=BooleanOptionalAction, default=False)
+parser.add_argument('--timeout', help='Максимальное время выполнения функции (секунды)', type=int, default=5)
+
+
+@dataclass
+class CaseResult:
+    expected: str | None = None
+    time: int | None = None
+    exc: Exception | None = None
+    actual: str | None = None
+
+    @property
+    def success(self) -> bool:
+        return self.actual == self.expected and self.actual is not None
+
+
+@dataclass
+class Case:
+    name: str
+    input_path: Path
+    output_path: Path
+    result: CaseResult | None = None
+
+    def input(self) -> list[str]:
+        with open(self.input_path) as fp:
+            return fp.readlines()
+
+    def output(self) -> str:
+        with open(self.output_path) as fp:
+            return fp.readline().strip()
 
 
 def main(
@@ -21,45 +56,86 @@ def main(
         module_name: str = 'main',
         function_name: str = 'main',
         description_path: str | None = None,
+        short: bool = False,
+        timeout: int = 5,
         tests: str | None = None
 ):
-    module = import_module(f'{task}.{module_name}')
-    solution = getattr(module, function_name)
-
-    path = Path(f'{task}/{cases}')
+    task_path = task.replace('.', '/')
 
     if description_path:
-        with open(f'{task}/{description_path}') as fp:
+        with open(f'{task_path}/{description_path}') as fp:
             print(fp.read())
 
-    cases = path.glob(f'*{input_ext}')
+    path = Path(f'{task_path}/{cases}')
+    cases = get_cases(path, input_ext, output_ext, tests)
+
+    module = import_module(f'{task}.{module_name}')
+    solution = getattr(module, function_name)
+    solution = timeout_deco(timeout)(solution)
+
+    for case in sorted(cases, key=lambda x: x.name):
+        result = CaseResult()
+
+        result.expected = case.output()
+        start = monotonic()
+        try:
+            result.actual = solution(case.input())
+        except Exception as e:
+            result.exc = e
+
+        result.time = monotonic() - start
+
+        case.result = result
+        if short:
+            short_display_case(case)
+        else:
+            display_case(case)
+
+
+def get_cases(path: Path, input_ext: str, output_ext: str, tests: str | None = None) -> list[Case]:
+    case_paths = path.glob(f'*{input_ext}')
     if tests is not None:
         files = set([f'{name.strip()}{input_ext}' for name in tests.split(',')])
-        cases = [case for case in cases if case.name in files]
+        case_paths = [case_path for case_path in case_paths if case_path.name in files]
 
-    for case in cases:
-        print('-' * 10)
-        case_name = case.name.removesuffix(input_ext)
-        print(case_name)
-        print('-' * 10)
+    cases = []
+    for case_path in case_paths:
+        name = case_path.name.removesuffix(input_ext)
+        cases.append(Case(
+            name=name,
+            input_path=case_path,
+            output_path=next(path.glob(f'{name}{output_ext}'))
+        ))
 
-        with open(next(path.glob(f'{case_name}{output_ext}'))) as fp:
-            expected = fp.readline().strip()
+    return cases
 
-        with open(case) as fp:
-            data = fp.readlines()
 
-        print(f'Входные данные: {" ".join(data)}')
-        print(f'Ожидается: {expected}')
+def display_case(case: Case):
+    print('-' * 10)
+    print(case.name)
+    print('-' * 10)
 
-        actual = solution(data)
-        print(f'Получено: {actual}')
+    print(f'Входные данные: {" ".join(case.input())}')
+    print(f'Ожидается: {case.result.expected}')
+    print(f'Получено:  {case.result.actual}')
+    print(f'Время выполнения: {(case.result.time * 1000):.4f} ms')
 
-        if actual == expected:
-            print('Тест пройден')
-        else:
-            print('ОШИБКА: Тест не пройден')
+    if case.result.success:
+        print('Тест пройден')
+    else:
+        print(f'ОШИБКА: Тест не пройден: {str(case.result.exc) if case.result.exc else ""}')
 
+
+def short_display_case(case: Case):
+    print('-' * 10)
+    print(case.name)
+    print('Ввод:', case.input())
+    print(f'Время выполнения: {(case.result.time * 1000):.0f} ms')
+    if case.result.success:
+        print('Тест пройден')
+    else:
+        print(f'ОШИБКА: Тест не пройден: {str(case.result.exc) if case.result.exc else ""}')
+    print('-' * 10)
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -71,5 +147,7 @@ if __name__ == '__main__':
         module_name=args.module,
         function_name=args.function,
         description_path=args.description,
-        tests=args.tests
+        tests=args.tests,
+        short=args.short,
+        timeout=args.timeout
     )
