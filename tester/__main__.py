@@ -53,7 +53,7 @@ def main(
         print(f'Ожидается: {expected}')
 
         actual = solution(data)
-        print(f'Получено: {actual}')
+        print(f'Получено:  {actual}')
 
         if actual == expected:
             print('Тест пройден')
