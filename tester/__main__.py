@@ -24,12 +24,13 @@ def main(
         tests: str | None = None
 ):
     module = import_module(f'{task}.{module_name}')
+    task_path = task.replace('.', '/')
     solution = getattr(module, function_name)
 
-    path = Path(f'{task}/{cases}')
+    path = Path(f'{task_path}/{cases}')
 
     if description_path:
-        with open(f'{task}/{description_path}') as fp:
+        with open(f'{task_path}/{description_path}') as fp:
             print(fp.read())
 
     cases = path.glob(f'*{input_ext}')

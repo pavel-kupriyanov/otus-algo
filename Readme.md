@@ -26,4 +26,6 @@ options:
 
  ```
 #### Запуск тестера:
-`python3 -m tester <имя пакета, например: tickets>`
+* Счастливые билеты: `python3 -m tester tickets`
+* Возведение в степень через разложение: `python3 -m tester power --module power_log_n`  
+* Итеративное возведение в степень: `python3 -m tester power --module power_n` 

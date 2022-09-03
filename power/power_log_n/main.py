@@ -1,5 +1,5 @@
 from decimal import Decimal
-from .utils import format_result
+from ..utils import format_result
 
 
 def main(args: list[str]) -> str:
