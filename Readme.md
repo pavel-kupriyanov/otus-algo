@@ -28,4 +28,7 @@ options:
 #### Запуск тестера:
 * Счастливые билеты: `python3 -m tester tickets`
 * Возведение в степень через разложение: `python3 -m tester power --module power_log_n`  
-* Итеративное возведение в степень: `python3 -m tester power --module power_n` 
+* Итеративное возведение в степень: `python3 -m tester power --module power_n`
+* Рекурсивное число Фибоначчи: `python3 -m tester fibo --module recursive`
+* Итеративное число Фибоначчи: `python3 -m tester fibo --module iter`
+* Матричное число Фибоначчи: `python3 -m tester fibo --module matrix`

@@ -1,5 +1,5 @@
 from decimal import Decimal
-from ..utils import format_result
+from .utils import format_result
 
 
 def main(args: list[str]) -> str:
@@ -21,7 +21,7 @@ def is_pow2(n: int) -> bool:
 
 
 def pow2(a: float, n: int):
-    assert is_pow2(n), 'n должно быть степенью двойки'
+    assert is_pow2(n), 'n должно быть степенью 2'
     a_dec = Decimal(a)
     while n > 1:
         a_dec *= a_dec
