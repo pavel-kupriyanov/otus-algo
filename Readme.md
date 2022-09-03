@@ -1,6 +1,9 @@
 # Отус алгоритмы и структуры данных
+
 ## Куприянов Павел
+
 ### Тестер
+
 ```
 Фреймворк для запуска тестов
 
@@ -25,10 +28,15 @@ options:
                         Список имен файлов для тестов, разделенных запятой
 
  ```
+
 #### Запуск тестера:
+
 * Счастливые билеты: `python3 -m tester tickets`
-* Возведение в степень через разложение: `python3 -m tester power --module power_log_n`  
+* Возведение в степень через разложение: `python3 -m tester power --module power_log_n`
 * Итеративное возведение в степень: `python3 -m tester power --module power_n`
-* Рекурсивное число Фибоначчи: `python3 -m tester fibo --module recursive`
-* Итеративное число Фибоначчи: `python3 -m tester fibo --module iter`
-* Матричное число Фибоначчи: `python3 -m tester fibo --module matrix`
+* Рекурсивное число Фибоначчи: `python3 -m tester fibo --module fibo_recursive`
+* Итеративное число Фибоначчи: `python3 -m tester fibo --module fibo_iter`
+* Матричное число Фибоначчи: `python3 -m tester fibo --module fibo_matrix`
+* Простые числа квадрат: `python3 -m tester primes --module primes_square`
+* Простые числа оптимизации: `python3 -m tester primes --module primes_cache`
+* Простые числа Эратосфен: `python3 -m tester primes --module primes_eratosphene`
