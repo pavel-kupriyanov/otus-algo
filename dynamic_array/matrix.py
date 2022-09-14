@@ -67,11 +67,11 @@ class MatrixArray:
 
     def remove(self, index: int):
         if index < 0:
-            index = max(self.size + 1 + index, 0)
+            index = max(self.size + index, 0)
 
         item = self.pull(index)
 
-        if self.last_line_size == 0:
+        if self.last_line_size == 0 or all(map(lambda x: x is placeholder, self.matrix[-1])):
             self.reduce()
 
         return item

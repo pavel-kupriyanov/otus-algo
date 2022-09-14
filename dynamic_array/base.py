@@ -40,3 +40,14 @@ class BaseArray:
         self.array[-1] = placeholder
         return removed
 
+
+class WrapArray:
+
+    def __init__(self):
+        self.array = []
+
+    def append(self, item, index: int = -1):
+        return self.array.insert(index, item)
+
+    def remove(self, index):
+        return self.array.pop(index)
