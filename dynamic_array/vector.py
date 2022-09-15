@@ -9,6 +9,9 @@ class VectorArray(BaseArray):
         self.array = [placeholder] * self.vector_size
         self._size = 0
 
+    def __repr__(self):
+        return repr(self.array)
+
     @property
     def size(self):
         return self._size

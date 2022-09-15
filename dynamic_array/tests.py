@@ -1,6 +1,5 @@
 from unittest import TestCase
 from time import monotonic
-from copy import copy
 
 from tester.timeout import timeout_deco
 
@@ -9,6 +8,7 @@ from .single import SingleArray
 from .vector import VectorArray
 from .factor import FactorArray
 from .matrix import insert_to_line_right, insert_to_line_left, MatrixArray
+from .space import SpaceArray
 
 
 class ArrayTest(TestCase):
@@ -158,6 +158,44 @@ class ArrayTest(TestCase):
         assert line == [1, 2, 5, 3, 4]
 
 
+    def test_space_array(self):
+        arr = SpaceArray(max_size=5, space=3)
+
+        for i in range(20):
+            arr.append(i)
+
+        assert arr.matrix[1][1] == 4
+
+        arr.append(100, 4)
+        assert arr.matrix[1][1] == 100
+        assert arr.matrix[1][2] == 4
+
+        removed = arr.remove(4)
+        assert removed == 100
+        assert arr[4] == 4
+
+        arr.remove(3)
+        arr.remove(3)
+        arr.remove(3)
+
+        assert len(arr.matrix) == 6
+
+        arr = SpaceArray(max_size=4, space=2)
+
+        for i in range(4):
+            arr.append(i)
+
+        arr.append(100, 1)
+        arr.append(100, 1)
+        arr.append(100, 2)
+        arr.append(100, 2)
+
+        arr.append(1000, 0)
+
+        assert len(arr.matrix) == 3
+        assert arr[7] == 2
+
+
 class BenchmarkTest(TestCase):
 
     def arrays(self):
@@ -166,7 +204,8 @@ class BenchmarkTest(TestCase):
             'Простой массив': SingleArray,
             'Векторный массив': VectorArray,
             'Факторный массив': FactorArray,
-            'Матричный массив': MatrixArray
+            'Матричный массив': MatrixArray,
+            'Разряженный массив': SpaceArray
         }
 
     def run_test(self, case, cases, name, array_cls, init: callable = None):
