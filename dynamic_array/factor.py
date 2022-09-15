@@ -27,6 +27,7 @@ class FactorArray(BaseArray):
         super().append(item, index)
 
     def remove(self, index: int):
-        super().remove(index)
+        item = super().remove(index)
         self.reduce()
         self._size -= 1
+        return item

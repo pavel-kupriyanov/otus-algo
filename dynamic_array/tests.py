@@ -9,6 +9,7 @@ from .vector import VectorArray
 from .factor import FactorArray
 from .matrix import insert_to_line_right, insert_to_line_left, MatrixArray
 from .space import SpaceArray
+from .queue import PriorityQueue
 
 
 class ArrayTest(TestCase):
@@ -157,7 +158,6 @@ class ArrayTest(TestCase):
         assert excess == 0
         assert line == [1, 2, 5, 3, 4]
 
-
     def test_space_array(self):
         arr = SpaceArray(max_size=5, space=3)
 
@@ -194,6 +194,23 @@ class ArrayTest(TestCase):
 
         assert len(arr.matrix) == 3
         assert arr[7] == 2
+
+    def test_queue(self):
+        priority_queue = PriorityQueue()
+
+        priority_queue.enqueue(10, 'foo')
+        priority_queue.enqueue(10, 'bar')
+        priority_queue.enqueue(1, 'baz')
+        priority_queue.enqueue(100, 'fuu')
+
+        fuu, foo, bar, baz = [priority_queue.dequeue() for _ in range(4)]
+
+        assert fuu == 'fuu'
+        assert foo == 'foo'
+        assert baz == 'baz'
+        assert bar == 'bar'
+
+        assert len(priority_queue.queues) == 0
 
 
 class BenchmarkTest(TestCase):
