@@ -46,3 +46,4 @@ options:
 * Простые числа квадрат: `python3 -m tester primes --module primes_square`
 * Простые числа оптимизации: `python3 -m tester primes --module primes_cache`
 * Простые числа Эратосфен: `python3 -m tester primes --module primes_eratosphene`
+* Битовые шахматы Король: `python3 -m tester bits.king`
