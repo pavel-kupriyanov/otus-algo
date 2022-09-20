@@ -45,10 +45,10 @@ def insert_optimized(arr: list[int]):
 
 
 def n_square(n: int):
-    gap = n // 2
-    while gap > 0:
+    gap = 1
+    while gap < n:
         yield gap
-        gap //= 2
+        gap *= 2
 
 
 def n_2k_minus_1(n: int):
@@ -62,14 +62,15 @@ def n_4pow_k_plus_2pow_k_minus_1_plus_1(n: int):
     yield 1
     gap, k = 1, 1
     while gap < n:
-        gap = 4 ** k + 2 ** (k - 1) + 1
+        gap = pow(4, k) + pow(2, k - 1) + 1
         yield gap
         k += 1
 
 
 def shell(arr: list[int], gap_gen=n_square):
     n = len(arr)
-    for gap in gap_gen(n):
+    gaps = list(gap_gen(n))
+    for gap in reversed(gaps):
         for i in range(gap, n):
             j = i
             while j >= gap and arr[j - gap] > arr[j]:
