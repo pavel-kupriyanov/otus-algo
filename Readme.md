@@ -38,6 +38,8 @@ options:
 #### Запуск тестера:
 
 * Счастливые билеты: `python3 -m tester tickets`
+
+
 * Возведение в степень через разложение: `python3 -m tester power --module power_log_n`
 * Итеративное возведение в степень: `python3 -m tester power --module power_n`
 * Рекурсивное число Фибоначчи: `python3 -m tester fibo --module fibo_recursive`
@@ -46,3 +48,10 @@ options:
 * Простые числа квадрат: `python3 -m tester primes --module primes_square`
 * Простые числа оптимизации: `python3 -m tester primes --module primes_cache`
 * Простые числа Эратосфен: `python3 -m tester primes --module primes_eratosphene`
+
+
+* Битовые шахматы Король: `python3 -m tester bits.king`
+* Битовые шахматы Конь: `python3 -m tester bits.knight`
+* Битовые шахматы Слон: `python3 -m tester bits.bishop`
+* Битовые шахматы Ладья: `python3 -m tester bits.castle`
+* Битовые шахматы Ферзь: `python3 -m tester bits.queen`

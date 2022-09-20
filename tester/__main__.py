@@ -29,7 +29,13 @@ class CaseResult:
 
     @property
     def success(self) -> bool:
-        return self.actual == self.expected and self.actual is not None
+        if self.actual is None:
+            return False
+
+        if isinstance(self.actual, list):
+            return self.actual == self.expected
+
+        return self.actual == self.expected[0]
 
 
 @dataclass
@@ -43,9 +49,9 @@ class Case:
         with open(self.input_path) as fp:
             return fp.readlines()
 
-    def output(self) -> str:
+    def output(self) -> list[str]:
         with open(self.output_path) as fp:
-            return fp.readline().strip()
+            return [line.strip() for line in fp.readlines()]
 
 
 def main(
@@ -136,6 +142,7 @@ def short_display_case(case: Case):
     else:
         print(f'ОШИБКА: Тест не пройден: {str(case.result.exc) if case.result.exc else ""}')
     print('-' * 10)
+
 
 if __name__ == '__main__':
     args = parser.parse_args()
