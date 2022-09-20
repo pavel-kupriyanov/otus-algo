@@ -1,6 +1,3 @@
-MAX = 0xffffffffffffffff
-
-
 def not_(num: int) -> int:
     """
     Без сторонних библиотек int в питоне со знаком и неограничен по длине, поэтому оператор ~ работает не так
@@ -83,23 +80,3 @@ class Vertical:
     H = 0x7f7f7f7f7f7f7f7f
 
     items = [A, B, C, D, E, F, G, H]
-
-
-class Line:
-    A = 0xfefefefefefefefe
-    B = 0xfdfdfdfdfdfdfdfd
-    C = 0xfbfbfbfbfbfbfbfb
-    D = 0xf7f7f7f7f7f7f7f7
-    E = 0xefefefefefefefef
-    F = 0xdfdfdfdfdfdfdfdf
-    G = 0xbfbfbfbfbfbfbfbf
-    H = 0x7f7f7f7f7f7f7f7f
-
-    N1 = 0xffffffffffffff00
-    N2 = 0xffffffffffff00ff
-    N3 = 0xffffffffff00ffff
-    N4 = 0xffffffff00ffffff
-    N5 = 0xffffff00ffffffff
-    N6 = 0xffff00ffffffffff
-    N7 = 0xff00ffffffffffff
-    N8 = 0xffffffffffffff
