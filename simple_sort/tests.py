@@ -13,8 +13,10 @@ from .sorts import (
     insert_optimized,
     shell,
     n_2k_minus_1,
-    n_4pow_k_plus_2pow_k_minus_1_plus_1
+    n_4pow_k_plus_2pow_k_minus_1_plus_1,
+    select
 )
+from .heap import heap
 
 
 class SortTest(TestCase):
@@ -28,7 +30,9 @@ class SortTest(TestCase):
             insert_optimized,
             shell,
             partial(shell, gap_gen=n_2k_minus_1),
-            partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1)
+            partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1),
+            select,
+            heap
         ]
         for sort in sorts:
             arr = list(range(11))
@@ -54,6 +58,8 @@ class BenchmarkTest(TestCase):
             'Сортировка Шелла': shell,
             'Сортировка Шелла (2k - 1)': partial(shell, gap_gen=n_2k_minus_1),
             'Сортировка Шелла (4**k + 2**(k-1) + 1)': partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1),
+            'Выбор': select,
+            'Пирамидальная': heap
         }
 
     def run_test(self, sort, arr, name):
@@ -79,7 +85,7 @@ class BenchmarkTest(TestCase):
             10_000,
             100_000,
             1_000_000,
-            10_000_000
+            # 10_000_000
         ]
 
         @timeout_deco(3)

@@ -76,3 +76,18 @@ def shell(arr: list[int], gap_gen=n_square):
             while j >= gap and arr[j - gap] > arr[j]:
                 arr[j - gap], arr[j] = arr[j], arr[j - gap]
                 j -= gap
+
+
+def get_max_index(arr: list[int]) -> int:
+    max_index = 0
+    for i, elem in enumerate(arr[1:], start=1):
+        if elem > arr[max_index]:
+            max_index = i
+    return max_index
+
+
+def select(arr: list[int]):
+    max_index = get_max_index(arr)
+    for i in reversed(range(len(arr))):
+        arr[i], arr[max_index] = arr[max_index], arr[i]
+        max_index = get_max_index(arr[0:i])
