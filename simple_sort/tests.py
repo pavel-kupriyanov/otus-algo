@@ -17,6 +17,8 @@ from .sorts import (
     select
 )
 from .heap import heap
+from .quick import quick
+from .merge import sort as merge
 
 
 class SortTest(TestCase):
@@ -32,34 +34,34 @@ class SortTest(TestCase):
             partial(shell, gap_gen=n_2k_minus_1),
             partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1),
             select,
-            heap
+            heap,
+            quick,
+            merge
         ]
         for sort in sorts:
-            arr = list(range(11))
-            for_sort = list(reversed(arr))
+            arr = [randint(0, 1000) for _ in range(100)]
+            for_sort = list(arr)
             sort(for_sort)
+            arr = sorted(arr)
             assert for_sort == arr
-
-    def test_shell(self):
-        arr = [randint(0, 1000) for _ in range(100)]
-        shell(arr, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1)
-        assert arr
 
 
 class BenchmarkTest(TestCase):
 
     def sorts(self):
         return {
-            'Пузырек': bubble,
-            'Оптимизированный пузырек': bubble_optimized,
-            'Вставка': insert,
-            'Вставка со смещением': insert_shift,
-            'Оптимизированная вставка': insert_optimized,
-            'Сортировка Шелла': shell,
-            'Сортировка Шелла (2k - 1)': partial(shell, gap_gen=n_2k_minus_1),
-            'Сортировка Шелла (4**k + 2**(k-1) + 1)': partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1),
-            'Выбор': select,
-            'Пирамидальная': heap
+            # 'Пузырек': bubble,
+            # 'Оптимизированный пузырек': bubble_optimized,
+            # 'Вставка': insert,
+            # 'Вставка со смещением': insert_shift,
+            # 'Оптимизированная вставка': insert_optimized,
+            # 'Сортировка Шелла': shell,
+            # 'Сортировка Шелла (2k - 1)': partial(shell, gap_gen=n_2k_minus_1),
+            # 'Сортировка Шелла (4**k + 2**(k-1) + 1)': partial(shell, gap_gen=n_4pow_k_plus_2pow_k_minus_1_plus_1),
+            # 'Выбор': select,
+            # 'Пирамидальная': heap,
+            'Быстрая': quick,
+            'Слияние': merge
         }
 
     def run_test(self, sort, arr, name):
@@ -85,7 +87,7 @@ class BenchmarkTest(TestCase):
             10_000,
             100_000,
             1_000_000,
-            # 10_000_000
+            10_000_000
         ]
 
         @timeout_deco(3)
