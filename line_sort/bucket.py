@@ -11,13 +11,13 @@ def bucket_sort(arr: list[int]):
         else:
             buckets[position] = item
 
-    original_idx = 0
+    index = 0
     for bucket in buckets:
         if isinstance(bucket, list):
             bucket = sorted(bucket)
             for item in bucket:
-                arr[original_idx] = item
-                original_idx += 1
+                arr[index] = item
+                index += 1
         elif isinstance(bucket, int):
-            arr[original_idx] = bucket
-            original_idx += 1
+            arr[index] = bucket
+            index += 1
