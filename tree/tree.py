@@ -12,27 +12,27 @@ class Node:
 
 class BinaryTree:
     root: Node | None
+    node_cls = Node
 
     def __init__(self, root: int | None = None):
         self.root = None
         if root is not None:
-            self.root = Node(root)
+            self.root = self.node_cls(root)
 
-    def insert(self, value: int):
-        node = Node(value)
+    def insert(self, value: int) -> Node:
+        node = self.node_cls(value)
 
         if self.root is None:
             self.root = node
-            return
+            return node
 
         current = self.root
-
         while True:
             if value < current.value:
                 if current.left is None:
                     current.left = node
                     node.parent = current
-                    return
+                    break
 
                 current = current.left
                 continue
@@ -40,9 +40,11 @@ class BinaryTree:
             if current.right is None:
                 current.right = node
                 node.parent = current
-                return
+                break
 
             current = current.right
+
+        return node
 
     def search(self, value: int) -> Node | None:
         current = self.root
@@ -103,5 +105,4 @@ class BinaryTree:
             else:
                 parent.right = new_node
 
-            del node
             return

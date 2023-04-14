@@ -1,14 +1,54 @@
 from unittest import TestCase
-from random import randint
+from random import shuffle, choices
 
 from tester.timeout import timeout_deco, timeout
 
 from .tree import BinaryTree
+from .balanced import BalancedTree
 
 #           4
 #     2           6
 #  1           5      8
 ITEMS = [4, 2, 6, 5, 1, 8]
+
+#           5
+#     3           7
+#  2     4      6      8
+# 1
+BALANCED_ITEMS = [8, 7, 6, 5, 4, 3, 2, 1]
+
+
+class BalancedTreeTest(TestCase):
+    def test_insert(self):
+        tree = BalancedTree()
+        for item in BALANCED_ITEMS:
+            tree.insert(item)
+
+        assert tree.root.value == 5
+        assert tree.root.left.value == 3
+        assert tree.root.left.left.left.value == 1
+
+        assert tree.root.right.right.value == 8
+
+    def test_search(self):
+        tree = BalancedTree()
+        for item in BALANCED_ITEMS:
+            tree.insert(item)
+
+        node = tree.search(999)
+        assert node is None
+
+        node = tree.search(1)
+        assert node.value == 1
+
+    def test_delete(self):
+        tree = BalancedTree()
+        for item in BALANCED_ITEMS:
+            tree.insert(item)
+
+        tree.remove(7)
+        assert tree.search(7) is None
+        assert tree.root.right.value == 8
 
 
 class TreeTest(TestCase):
@@ -55,6 +95,24 @@ class BenchmarkTest(TestCase):
             operation(item)
 
     def test_inserts(self):
+        self._test_inserts(BinaryTree)
+
+    def test_balanced_inserts(self):
+        self._test_inserts(BalancedTree)
+
+    def test_search(self):
+        self._test_search(BinaryTree)
+
+    def test_balanced_search(self):
+        self._test_search(BalancedTree)
+
+    def test_delete(self):
+        self._test_delete(BinaryTree)
+
+    def test_balanced_delete(self):
+        self._test_delete(BalancedTree)
+
+    def _test_inserts(self, tree_cls):
         cases = [
             100,
             1000,
@@ -67,17 +125,18 @@ class BenchmarkTest(TestCase):
             print('------------------')
             print(f'{case} элементов:')
             print('------------------')
-            arr = [randint(0, 999) for _ in range(case)]
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            shuffle(arr)
+            tree = tree_cls()
             with timeout('Случайные элементы'):
                 self.case(tree, arr, 'insert')
 
-            arr = sorted([randint(0, 999) for _ in range(case)])
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            tree = tree_cls()
             with timeout('Упорядоченные элементы'):
                 self.case(tree, arr, 'insert')
 
-    def test_search(self):
+    def _test_search(self, tree_cls):
         cases = [
             100,
             1000,
@@ -90,24 +149,26 @@ class BenchmarkTest(TestCase):
             print('------------------')
             print(f'{case} элементов:')
             print('------------------')
-            searched = [randint(0, 999) for _ in range(case // 10)]
-            arr = [randint(0, 999) for _ in range(case)]
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            shuffle(arr)
+            searched = choices(arr, k=case // 10)
+            tree = tree_cls()
             for item in arr:
                 tree.insert(item)
 
             with timeout('Случайные элементы'):
                 self.case(tree, searched, 'search')
 
-            arr = sorted([randint(0, 999) for _ in range(case)])
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            searched = choices(arr, k=case // 10)
+            tree = tree_cls()
             for item in arr:
                 tree.insert(item)
 
             with timeout('Упорядоченные элементы'):
                 self.case(tree, searched, 'search')
 
-    def test_delete(self):
+    def _test_delete(self, tree_cls):
         cases = [
             100,
             1000,
@@ -115,22 +176,24 @@ class BenchmarkTest(TestCase):
             100_000,
         ]
 
-        print('Время поиска')
+        print('Время удаления')
         for case in cases:
             print('------------------')
             print(f'{case} элементов:')
             print('------------------')
-            deleted = [randint(0, 999) for _ in range(case // 10)]
-            arr = [randint(0, 999) for _ in range(case)]
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            shuffle(arr)
+            deleted = choices(arr, k=case // 10)
+            tree = tree_cls()
             for item in arr:
                 tree.insert(item)
 
             with timeout('Случайные элементы'):
                 self.case(tree, deleted, 'remove')
 
-            arr = sorted([randint(0, 999) for _ in range(case)])
-            tree = BinaryTree()
+            arr = [i for i in range(case)]
+            deleted = choices(arr, k=case // 10)
+            tree = tree_cls()
             for item in arr:
                 tree.insert(item)
 
