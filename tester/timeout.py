@@ -1,4 +1,6 @@
 from functools import wraps
+from contextlib import contextmanager
+from time import monotonic
 
 import signal
 
@@ -20,3 +22,18 @@ def timeout_deco(seconds=10):
         return wraps(func)(wrapper)
 
     return decorator
+
+
+@contextmanager
+def timeout(name):
+    timeout_reached = False
+    start = monotonic()
+    try:
+        yield
+    except TimeoutError:
+        timeout_reached = True
+
+    time = monotonic() - start
+
+    formatted_time = f'{(time * 1000):.0f} ms'
+    print(f'{name}: {formatted_time if not timeout_reached else "timeout"}')
